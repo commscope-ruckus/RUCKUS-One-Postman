@@ -13,6 +13,4 @@ The collection named **RUCKUS One** uses a regular R1 account. It is a walkthrou
 The collection named **RUCKUS One MSP** has two folders. The first folder contains a walkthrough using an MSP account which has delegated accounts. The last call picks one MSP-EC.
 The second folder is a walkthrough using the MSP-EC.
 In order to access a delegated account, besides using the jwt token for authentication, you need to add another header named **x-rks-tenantid**, whose value is the tenant id for the managed account.
-
-
-
+The collecion named **RUCKUS One Hospitality Edition** also contains two folders, because it is also for an instance that uses delegated accounts. The top level is the MSP or LSP, and the bottom level is the REC (RUCKUS End Customer), which are the properties managed by a brand. As with the MSP-EC, in order to access a property, besides using the jwt token for authentication, you need to add the header **x-rks-tenantid** to the request, whose value is the tenant id for the property.
