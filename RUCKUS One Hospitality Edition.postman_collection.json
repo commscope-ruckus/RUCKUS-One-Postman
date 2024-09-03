@@ -1,0 +1,1001 @@
+{
+	"info": {
+		"_postman_id": "b8d56ba7-5ab0-412c-8efd-806aeb9b624e",
+		"name": "RUCKUS One Hospitality Edition",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32551365"
+	},
+	"item": [
+		{
+			"name": "Brand level",
+			"item": [
+				{
+					"name": "get jwt",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set('baseUrl','https://api.ruckus.cloud');",
+									"pm.collectionVariables.set('tenantId','your_tenant_id');"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set('jwt', jsonData.access_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "your_client_id",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "your_secret_id",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/oauth2/token/{{tenantId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"oauth2",
+								"token",
+								"{{tenantId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get brand details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/mspLabels",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"mspLabels"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get brand admins",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tenants/self?deep=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tenants",
+								"self"
+							],
+							"query": [
+								{
+									"key": "deep",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list MSPs and Tech Partners",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"mspEcTenantId\", jsonData[1].tenant_id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/mspCustomers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"mspCustomers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list space templates",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"venueId\", jsonData[0].id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/venues",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"venues"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list brand properties",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"mspRecTenantId\", jsonData.data[0].id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "accept-language",
+								"value": "en-GB,en-US;q=0.9,en;q=0.8"
+							},
+							{
+								"key": "authorization",
+								"value": "{{jwt}}"
+							},
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "cookie",
+								"value": "JSESSIONID=B041FB16E457459EFD9897C419C78B46"
+							},
+							{
+								"key": "origin",
+								"value": "https://dev.ruckus.cloud"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://dev.ruckus.cloud/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Chromium\";v=\"128\", \"Not;A=Brand\";v=\"24\", \"Google Chrome\";v=\"128\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"macOS\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"searchString\": \"\",\n    \"filters\": {\n        \"tenantType\": [\n            \"MSP_REC\"\n        ]\n    },\n    \"fields\": [\n        \"id\",\n        \"name\",\n        \"tenantType\",\n        \"status\",\n        \"alarmCount\",\n        \"mspAdminCount\",\n        \"mspEcAdminCount\",\n        \"creationDate\",\n        \"expirationDate\",\n        \"wifiLicense\",\n        \"streetAddress\"\n    ],\n    \"searchTargetFields\": [\n        \"name\"\n    ],\n    \"page\": 1,\n    \"pageSize\": 10,\n    \"defaultPageSize\": 10,\n    \"total\": 0,\n    \"sortField\": \"name\",\n    \"sortOrder\": \"ASC\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.eu.ruckus.cloud/mspecs/query",
+							"protocol": "https",
+							"host": [
+								"api",
+								"eu",
+								"ruckus",
+								"cloud"
+							],
+							"path": [
+								"mspecs",
+								"query"
+							]
+						},
+						"description": "Generated from cURL: curl --location 'https://api.dev.ruckus.cloud/mspecs/query' \\\n--header 'accept: application/json' \\\n--header 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \\\n--header 'authorization: Bearer eyJraWQiOiIxNzI0NTQ3NjAwNDA2OTY0MjI0IiwidHlwIjoiSldUIiwiYWxnIjoiRVMzODQifQ.eyJ0ZW5hbnRUeXBlIjoiTVNQX05PTl9WQVIiLCJzd3VJZCI6IjAwM0QyMDAwMDBuMndXcUlBSSIsImxhc3ROYW1lIjoiRGVtbyIsInN1YiI6IjQ0ZDhlYjg3NTczNDRkY2ZiMTFlOGU1OTVhMTMyNTk4IiwicHZlciI6InJ1Y2t1cy1vbmUiLCJpc3MiOiJhdXRoLXNlcnZpY2UiLCJhY3hfYXBwX3R5cGUiOiJ3ZWJhcHAiLCJtbGlzYVVzZXJSb2xlIjoiYWx0by1mdWxsLWFuYWx5dGljcyIsInNjb3BlIjoibG9naW4iLCJhZG1pbklkIjoiZDY0YzBkYTMyM2FmNGE4N2E4M2M3YTEwNTIwY2Y2NzUiLCJleHAiOjE3MjQ4OTE0MjMsImlhdCI6MTcyNDg4NzgyMywianRpIjoiNmMzZDJhNWEtMzMyMC00NzBiLTg4ZWUtZDA3YzFkZDdjODI3IiwiaXNWYXIiOmZhbHNlLCJhY3hfYWNjb3VudF92ZXJ0aWNhbCI6Ikhvc3BpdGFsaXR5IiwiaXNCZXRhRmxhZyI6ZmFsc2UsInVzZXJOYW1lIjoiaHNwZGVtb2FkbWluQGVtYWlsLmNvbSIsImZpcnN0TmFtZSI6IkhTUCIsImlzQWxwaGFGbGFnIjpmYWxzZSwiZmxleGVyYV9hbG1fYWNjb3VudF9pZCI6IiIsInRlbmFudElkIjoiNDRkOGViODc1NzM0NGRjZmIxMWU4ZTU5NWExMzI1OTgiLCJyb2xlTmFtZSI6WyJQUklNRV9BRE1JTiJdLCJpc1J1Y2t1c1N1cHBvcnQiOmZhbHNlLCJyZW5ldyI6MTcyNDg5MTA2MywicmVnaW9uIjoiW05BXSIsImFjeF9hY2NvdW50X3RpZXIiOiJQbGF0aW51bSIsImFjeF90cmlhbF9pbl9wcm9ncmVzcyI6ZmFsc2V9.ZndyCmM7oR0Md1_xDbmErZ-uEum7VggOYdntcUzODMU5XA2w5N-hmV1EGMVDN5ZTy0S4c3cvdn72im939nzQCmdjOWM-ksbJ9wY4OoA55mLJMVdlhKshiqHKjCmoCUH6' \\\n--header 'content-type: application/json' \\\n--header 'cookie: JSESSIONID=B041FB16E457459EFD9897C419C78B46' \\\n--header 'origin: https://dev.ruckus.cloud' \\\n--header 'priority: u=1, i' \\\n--header 'referer: https://dev.ruckus.cloud/' \\\n--header 'sec-ch-ua: \"Chromium\";v=\"128\", \"Not;A=Brand\";v=\"24\", \"Google Chrome\";v=\"128\"' \\\n--header 'sec-ch-ua-mobile: ?0' \\\n--header 'sec-ch-ua-platform: \"macOS\"' \\\n--header 'sec-fetch-dest: empty' \\\n--header 'sec-fetch-mode: cors' \\\n--header 'sec-fetch-site: same-site' \\\n--header 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36' \\\n--data '{\n    \"searchString\": \"\",\n    \"filters\": {\n        \"tenantType\": [\n            \"MSP_REC\"\n        ]\n    },\n    \"fields\": [\n        \"check-all\",\n        \"id\",\n        \"name\",\n        \"tenantType\",\n        \"status\",\n        \"alarmCount\",\n        \"mspAdminCount\",\n        \"mspEcAdminCount\",\n        \"creationDate\",\n        \"expirationDate\",\n        \"wifiLicense\",\n        \"switchLicense\",\n        \"streetAddress\"\n    ],\n    \"searchTargetFields\": [\n        \"name\"\n    ],\n    \"page\": 1,\n    \"pageSize\": 10,\n    \"defaultPageSize\": 10,\n    \"total\": 0,\n    \"sortField\": \"name\",\n    \"sortOrder\": \"ASC\"\n}'"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Property level",
+			"item": [
+				{
+					"name": "get property details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/mspCustomers/{{mspRecTenantId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"mspCustomers",
+								"{{mspRecTenantId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list spaces",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"venueId\", jsonData[0].id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-rks-tenantid",
+								"value": "{{mspRecTenantId}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/venues",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"venues"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list APs including details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"apSerialNumber\", jsonData[0].serialNumber);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-rks-tenantid",
+								"value": "{{mspRecTenantId}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/venues/aps",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"venues",
+								"aps"
+							]
+						},
+						"description": "Use this API command to get the network list."
+					},
+					"response": []
+				},
+				{
+					"name": "get AP details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-rks-tenantid",
+								"value": "{{mspRecTenantId}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/venues/aps/{{apSerialNumber}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"venues",
+								"aps",
+								"{{apSerialNumber}}"
+							]
+						},
+						"description": "Use this API command to get the network list."
+					},
+					"response": []
+				},
+				{
+					"name": "list networks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"networkId\", jsonData[0].id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-rks-tenantid",
+								"value": "{{mspRecTenantId}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/networks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"networks"
+							]
+						},
+						"description": "Use this API command to get the network list."
+					},
+					"response": []
+				},
+				{
+					"name": "get network details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-rks-tenantid",
+								"value": "{{mspRecTenantId}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/networks/{{networkId}}?deep=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"networks",
+								"{{networkId}}"
+							],
+							"query": [
+								{
+									"key": "deep",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Use this API command to get the network list."
+					},
+					"response": []
+				},
+				{
+					"name": "list all clients",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"clientMac\", jsonData[0].mac);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-rks-tenantid",
+								"value": "{{mspRecTenantId}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/clients",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"clients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list clients per AP",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"clientMac\", jsonData[0].mac);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-rks-tenantid",
+								"value": "{{mspRecTenantId}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/clients?apSerialNumber={{apSerialNumber}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"clients"
+							],
+							"query": [
+								{
+									"key": "apSerialNumber",
+									"value": "{{apSerialNumber}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get client details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-rks-tenantid",
+								"value": "{{mspRecTenantId}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/clients/{{clientMac}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"clients",
+								"{{clientMac}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list client session history",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-rks-tenantid",
+								"value": "{{mspRecTenantId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"filters\": {\n        \"clientMAC\": [\n            \"{{clientMac}}\"\n        ],\n        \"fromTime\": \"2024-01-23T14:30:45Z\",\n        \"toTime\": \"2024-08-29T19:30:45Z\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/reports/clients/sessionHistories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reports",
+								"clients",
+								"sessionHistories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list all events",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-rks-tenantid",
+								"value": "{{mspRecTenantId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fields\": [\n        \"event_datetime\",\n        \"severity\",\n        \"entity_type\",\n        \"product\",\n        \"entity_id\",\n        \"message\",\n        \"dpName\",\n        \"apMac\",\n        \"clientMac\",\n        \"macAddress\",\n        \"apName\",\n        \"switchName\",\n        \"serialNumber\",\n        \"networkName\",\n        \"networkId\",\n        \"ssid\",\n        \"radio\",\n        \"raw_event\",\n        \"sourceType\",\n        \"adminName\",\n        \"clientName\",\n        \"userName\",\n        \"hostname\",\n        \"adminEmail\",\n        \"administratorEmail\",\n        \"venueName\",\n        \"venueId\",\n        \"apGroupId\",\n        \"apGroupName\",\n        \"floorPlanName\",\n        \"recipientName\",\n        \"transactionId\",\n        \"name\",\n        \"ipAddress\",\n        \"detailedDescription\",\n        \"Persona-ID\"\n    ],\n    \"page\": 1,\n    \"pageSize\": 300,\n    \"sortField\": \"event_datetime\",\n    \"sortOrder\": \"DESC\",\n    \"filters\": {\n        \"entity_type\": [\n            \"AP\",\n            \"SECURITY\",\n            \"CLIENT\",\n            \"SWITCH\",\n            \"NETWORK\",\n            \"EDGE\"\n        ]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/events/query",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events",
+								"query"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": ""
+		},
+		{
+			"key": "tenantId",
+			"value": ""
+		},
+		{
+			"key": "jwt",
+			"value": ""
+		},
+		{
+			"value": ""
+		},
+		{
+			"key": "venueId",
+			"value": ""
+		},
+		{
+			"key": "requestId",
+			"value": ""
+		},
+		{
+			"key": "apSerialNumber",
+			"value": ""
+		},
+		{
+			"key": "ssid",
+			"value": ""
+		},
+		{
+			"key": "passphrase",
+			"value": ""
+		},
+		{
+			"key": "networkId",
+			"value": ""
+		},
+		{
+			"key": "networkVenueId",
+			"value": ""
+		},
+		{
+			"key": "enableNeighborReport",
+			"value": ""
+		},
+		{
+			"key": "enableFastRoaming",
+			"value": ""
+		},
+		{
+			"key": "clientMac",
+			"value": ""
+		},
+		{
+			"key": "switchSerialNumber",
+			"value": ""
+		},
+		{
+			"key": "name",
+			"value": ""
+		},
+		{
+			"key": "switchMac",
+			"value": ""
+		},
+		{
+			"key": "mspEcTenantId",
+			"value": ""
+		},
+		{
+			"key": "mspRecTenantId",
+			"value": ""
+		}
+	]
+}
