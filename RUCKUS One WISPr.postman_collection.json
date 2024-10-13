@@ -1,0 +1,136 @@
+{
+	"info": {
+		"_postman_id": "e87db3a5-d763-41ec-8605-3b1461c070ac",
+		"name": "RUCKUS One WISPr",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9262131"
+	},
+	"item": [
+		{
+			"name": "Request client authentication",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"BaseURL\", \"yourTenantId.wispr.ruckus.cloud\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Vendor\": \"Ruckus\",\n    \"APIVersion\": \"1.0\",\n    \"RequestUserName\": \"api\",\n    \"RequestPassword\": \"integration key\",\n    \"RequestCategory\": \"UserOnlineControl\",\n    \"RequestType\": \"Login\",\n    \"UE-IP\": \"ENCb2579826807a64305d81c76d8264cf73\",\n    \"UE-MAC\": \"ENCa320a11d249cbfe6c314e665a6e95175\",\n    \"UE-Username\": \"student\",\n    \"UE-Password\": \"password..21\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{BaseURL}}:443/portalintf",
+					"protocol": "https",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"port": "443",
+					"path": [
+						"portalintf"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Always accept request",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"BaseURL\", \"yourTenantId.wispr.ruckus.cloud\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Vendor\": \"Ruckus\",\n    \"APIVersion\": \"1.0\",\n    \"RequestUserName\": \"api\",\n    \"RequestPassword\": \"integration key\",\n    \"RequestCategory\": \"UserOnlineControl\",\n    \"RequestType\": \"Authorize\",\n    \"UE-MAC\": \"2e6108273fb6\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{BaseURL}}:443/portalintf",
+					"protocol": "https",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"port": "443",
+					"path": [
+						"portalintf"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Decrypt IP or MAC",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"BaseURL\", \"yourTenantId.wispr.ruckus.cloud\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Vendor\": \"Ruckus\",\n    \"APIVersion\": \"1.0\",\n    \"RequestUserName\": \"api\",\n    \"RequestPassword\": \"integration key\",\n    \"RequestCategory\": \"GetConfig\",\n    \"RequestType\": \"DecryptIP\",\n    \"UE-IP\": \"ENCb2579826807a64305d81c76d8264cf73\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{BaseURL}}:443/portalintf",
+					"protocol": "https",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"port": "443",
+					"path": [
+						"portalintf"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "BaseURL",
+			"value": ""
+		}
+	]
+}
