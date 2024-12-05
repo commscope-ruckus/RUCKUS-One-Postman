@@ -10,6 +10,7 @@ Please see examples in the repository RUCKUS-One-Python for details.
 Any other response indicates a synchronous response. The read-APIs are always synchronous.
 
 The collection named **RUCKUS One** uses a regular R1 account. It is a walkthrough shows several common tasks executed using API calls.
+
 The collection named **RUCKUS One MSP** has two folders. The first folder contains a walkthrough using an MSP account which has delegated accounts. The last call picks one MSP-EC.
 The second folder is a walkthrough using the MSP-EC.
 In order to access a delegated account, besides using the jwt token for authentication, you need to add another header named **x-rks-tenantid**, whose value is the tenant id for the managed account.
