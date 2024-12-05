@@ -1,0 +1,1009 @@
+{
+	"info": {
+		"_postman_id": "41289b43-6395-4d6e-bfc9-8e5d171350c1",
+		"name": "RUCKUS One DPSK",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32551365"
+	},
+	"item": [
+		{
+			"name": "Service Management",
+			"item": [
+				{
+					"name": "get jwt",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set('baseUrl','https://api.ruckus.cloud');",
+									"pm.collectionVariables.set('tenantId','your_tenant_id');"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set('jwt', jsonData.access_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "your_client_id",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "your_client_secret",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/oauth2/token/{{tenantId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"oauth2",
+								"token",
+								"{{tenantId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get DPSK pools (deprecated)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/dpskServices",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dpskServices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query DPSK pools",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"dpskPoolId\", jsonData['data'][0].id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"searchString\": \"PSK\",\n    \"searchTargetFields\": [\n        \"name\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/dpskServices/query",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dpskServices",
+								"query"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create DPSK pool",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"requestId\", jsonData.requestId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"deviceCountLimit\": 5,\n    \"expirationDate\": \"2025-08-24T14:15:22Z\",\n    \"expirationOffset\": 1,\n    \"expirationType\": \"SPECIFIED_DATE\",\n    \"name\": \"MMPSK\",\n    \"passphraseFormat\": \"NUMBERS_ONLY\",\n    \"passphraseLength\": 8,\n    \"policyDefaultAccess\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/dpskServices",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dpskServices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get DPSK pool",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/dpskServices/{{dpskPoolId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dpskServices",
+								"{{dpskPoolId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update DPSK pool",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"requestId\", jsonData.requestId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"deviceCountLimit\": 7\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/dpskServices/{{dpskPoolId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dpskServices",
+								"{{dpskPoolId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete DPSK Pool",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"requestId\", jsonData.requestId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/dpskServices/{{dpskPoolId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dpskServices",
+								"{{dpskPoolId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get status of asynchronous request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/activities/{{requestId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"activities",
+								"{{requestId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Passphrase Management",
+			"item": [
+				{
+					"name": "get DPSKs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"dpskId\", jsonData['content'][2].id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/dpskServices/{{dpskPoolId}}/passphrases",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dpskServices",
+								"{{dpskPoolId}}",
+								"passphrases"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create DPSK (most secure)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"requestId\", jsonData.requestId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-rks-tenantid",
+								"value": "{{mspRecTenantId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"abc@email.com\",\n    \"expiration\": \"UNLIMITED\",\n    \"expirationDate\": \"2025-08-24T14:15:22Z\",\n    \"length\": 8,\n    \"format\": \"MOST_SECURED\",\n    \"mac\": \"22:22:33:44:55:66\",\n    \"numberOfDevices\": 1,\n    \"numberOfDevicesType\": \"UNLIMITED\",\n    \"numberOfPassphrases\": 1,\n    \"username\": \"simonetixa\",\n    \"vlanId\": 333\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/dpskServices/{{dpskPoolId}}/passphrases",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dpskServices",
+								"{{dpskPoolId}}",
+								"passphrases"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create DPSK (numbers only, pre-defined)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"requestId\", jsonData.requestId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-rks-tenantid",
+								"value": "{{mspRecTenantId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"abc@email.com\",\n    \"expiration\": \"UNLIMITED\",\n    \"expirationDate\": \"2025-08-24T14:15:22Z\",\n    \"length\": 8,\n    \"format\": \"NUMBERS_ONLY\",\n    \"passphrase\": \"18273645\",\n    \"mac\": \"22:22:33:44:55:66\",\n    \"numberOfDevices\": 1,\n    \"numberOfDevicesType\": \"UNLIMITED\",\n    \"numberOfPassphrases\": 1,\n    \"username\": \"simonetixa\",\n    \"vlanId\": 333\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/dpskServices/{{dpskPoolId}}/passphrases",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dpskServices",
+								"{{dpskPoolId}}",
+								"passphrases"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create multiple DPSKs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"requestId\", jsonData.requestId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"def@email.com\",\n    \"expiration\": \"UNLIMITED\",\n    \"expirationDate\": \"2025-08-24T14:15:22Z\",\n    \"format\": \"MOST_SECURED\",\n    \"length\": 8,\n    \"mac\": \"aa:bb:cc:44:55:66\",\n    \"numberOfDevices\": 1,\n    \"numberOfDevicesType\": \"UNLIMITED\",\n    \"numberOfPassphrases\": 5,\n    \"username\": \"marcelo\",\n    \"vlanId\": 666\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/dpskServices/{{dpskPoolId}}/passphrases",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dpskServices",
+								"{{dpskPoolId}}",
+								"passphrases"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "import DPSKs from csv file",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"requestId\", jsonData.requestId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "postman-cloud:///1efb345c-06da-4060-9df3-441773060221"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/dpskServices/{{dpskPoolId}}/passphrases/csvFiles",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dpskServices",
+								"{{dpskPoolId}}",
+								"passphrases",
+								"csvFiles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update DPSK",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"requestId\", jsonData.requestId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"changes\": {\n        \"numberOfDevices\": 9\n    },\n    \"ids\": [\n        \"{{dpskId}}\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/dpskServices/{{dpskPoolId}}/passphrases",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dpskServices",
+								"{{dpskPoolId}}",
+								"passphrases"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete DPSK",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"requestId\", jsonData.requestId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    \"{{dpskId}}\"\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/dpskServices/{{dpskPoolId}}/passphrases",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dpskServices",
+								"{{dpskPoolId}}",
+								"passphrases"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get status of asynchronous request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/activities/{{requestId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"activities",
+								"{{requestId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Device Management",
+			"item": [
+				{
+					"name": "get devices in a DPSK",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/dpskServices/{{dpskPoolId}}/passphrases/{{dpskId}}/devices",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dpskServices",
+								"{{dpskPoolId}}",
+								"passphrases",
+								"{{dpskId}}",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create devices in a DPSK",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"requestId\", jsonData.requestId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    \"23:34:45:56:67:78\",\n    \"12:23:34:45:56:67\"\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/dpskServices/{{dpskPoolId}}/passphrases/{{dpskId}}/devices",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dpskServices",
+								"{{dpskPoolId}}",
+								"passphrases",
+								"{{dpskId}}",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete devices from a DPSK",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"requestId\", jsonData.requestId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    \"23:34:45:56:67:78\",\n    \"12:23:34:45:56:67\"\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/dpskServices/{{dpskPoolId}}/passphrases/{{dpskId}}/devices",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dpskServices",
+								"{{dpskPoolId}}",
+								"passphrases",
+								"{{dpskId}}",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get status of asynchronous request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/activities/{{requestId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"activities",
+								"{{requestId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": ""
+		},
+		{
+			"key": "tenantId",
+			"value": ""
+		},
+		{
+			"key": "jwt",
+			"value": ""
+		},
+		{
+			"key": "venueId",
+			"value": ""
+		},
+		{
+			"key": "requestId",
+			"value": ""
+		},
+		{
+			"key": "apSerialNumber",
+			"value": ""
+		},
+		{
+			"key": "ssid",
+			"value": ""
+		},
+		{
+			"key": "passphrase",
+			"value": ""
+		},
+		{
+			"key": "networkId",
+			"value": ""
+		},
+		{
+			"key": "networkVenueId",
+			"value": ""
+		},
+		{
+			"key": "enableNeighborReport",
+			"value": ""
+		},
+		{
+			"key": "enableFastRoaming",
+			"value": ""
+		},
+		{
+			"key": "clientMac",
+			"value": ""
+		},
+		{
+			"key": "switchSerialNumber",
+			"value": ""
+		},
+		{
+			"key": "name",
+			"value": ""
+		},
+		{
+			"key": "switchMac",
+			"value": ""
+		},
+		{
+			"key": "dpskPoolId",
+			"value": ""
+		},
+		{
+			"key": "dpskId",
+			"value": ""
+		},
+		{
+			"key": "mspRecTenantId",
+			"value": ""
+		},
+		{
+			"value": ""
+		}
+	]
+}
