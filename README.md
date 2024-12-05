@@ -17,3 +17,5 @@ In order to access a delegated account, besides using the jwt token for authenti
 The collecion named **RUCKUS One Hospitality Edition** also contains two folders, because it is also for an instance that uses delegated accounts. The top level is the MSP or LSP, which is the brand, and the bottom level is the REC (RUCKUS End Customer), which are the properties managed by a brand. As with the MSP-EC, in order to access a property, besides using the jwt token for authentication, you need to add the header **x-rks-tenantid** to the request, whose value is the tenant id for the property.
 
 The collection named **RUCKUS One WISPr** has three API calls using the WISPr interface. You need to edit the tenantId in Scripts/Pre-Requests, and the Integration Key in the body. Change the UE-IP, UE-MAC, UE-Username and UE-Password to match the information of the client device and user credentials.
+
+The collection named **RUCKUS One DPSK** includes endpoints to manage DPSK pools, passphrases and devices. At the get jwt request, you need to edit the tenantId in Scripts/Pre-Requests, and the client_id and client_secret in the body. 
