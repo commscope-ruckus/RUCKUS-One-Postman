@@ -1,0 +1,495 @@
+{
+	"info": {
+		"_postman_id": "a650c353-3ab1-4f1d-a188-afffd5e7a1c9",
+		"name": "RUCKUS One Resident Portal",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32551365"
+	},
+	"item": [
+		{
+			"name": "get jwt",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set('baseUrl','https://api.ruckus.cloud');",
+							"pm.collectionVariables.set('tenantId','your_tenant_id');"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();",
+							"pm.collectionVariables.set('jwt', jsonData.access_token);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "your_client_id",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "your_client_secret",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/oauth2/token/{{tenantId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"oauth2",
+						"token",
+						"{{tenantId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get venues",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();",
+							"let rawId = jsonData[5].id;",
+							"",
+							"function hyphenateUUID(id) {",
+							"    return `${id.substring(0, 8)}-${id.substring(8, 12)}-${id.substring(12, 16)}-${id.substring(16, 20)}-${id.substring(20)}`;",
+							"}",
+							"",
+							"let formattedId = hyphenateUUID(rawId);",
+							"console.log(\"Formatted UUID:\", formattedId);",
+							"pm.collectionVariables.set(\"venueId\", formattedId);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/venues",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"venues"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get resident portal",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();",
+							"pm.collectionVariables.set(\"residentPortalId\", jsonData['content'][0].id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseUrl}}/residentPortals",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"residentPortals"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get resident portal details",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/residentPortals/{{residentPortalId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"residentPortals",
+						"{{residentPortalId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get property units",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();",
+							"pm.collectionVariables.set(\"unitId\", jsonData['content'][0].id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/venues/{{venueId}}/units",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"venues",
+						"{{venueId}}",
+						"units"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get property unit details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse the response JSON",
+							"let jsonData = pm.response.json();",
+							"let href = jsonData._links.residentPortal.href;",
+							"let url = new URL(href);",
+							"let authEncoded = url.searchParams.get(\"auth\");",
+							"let authDecoded = decodeURIComponent(authEncoded);",
+							"console.log(\"Decoded auth:\", authDecoded);",
+							"pm.collectionVariables.set(\"decoded_auth\", authDecoded);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/venues/{{venueId}}/units/{{unitId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"venues",
+						"{{venueId}}",
+						"units",
+						"{{unitId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "resident portal login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();",
+							"pm.collectionVariables.set('unit_jwt', jsonData.token);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"hashedSecret\": \"{{decoded_auth}}\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://residence.ruckus.cloud/residents/properties/{{venueId}}/units/logins",
+					"protocol": "https",
+					"host": [
+						"residence",
+						"ruckus",
+						"cloud"
+					],
+					"path": [
+						"residents",
+						"properties",
+						"{{venueId}}",
+						"units",
+						"logins"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get resident portal unit details",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{unit_jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://residence.ruckus.cloud/residents/properties/{{venueId}}/units",
+					"protocol": "https",
+					"host": [
+						"residence",
+						"ruckus",
+						"cloud"
+					],
+					"path": [
+						"residents",
+						"properties",
+						"{{venueId}}",
+						"units"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "reset token",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{unit_jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"status\":\"TOKEN_RESET\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://residence.ruckus.cloud/residents/properties/{{venueId}}/units",
+					"protocol": "https",
+					"host": [
+						"residence",
+						"ruckus",
+						"cloud"
+					],
+					"path": [
+						"residents",
+						"properties",
+						"{{venueId}}",
+						"units"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": ""
+		},
+		{
+			"key": "tenantId",
+			"value": ""
+		},
+		{
+			"key": "jwt",
+			"value": ""
+		},
+		{
+			"key": "residentPortalId",
+			"value": ""
+		},
+		{
+			"key": "venueId",
+			"value": ""
+		},
+		{
+			"key": "unitId",
+			"value": ""
+		},
+		{
+			"key": "unit_jwt",
+			"value": ""
+		},
+		{
+			"key": "decoded_auth",
+			"value": ""
+		}
+	]
+}
