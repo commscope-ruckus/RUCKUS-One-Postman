@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "b8d56ba7-5ab0-412c-8efd-806aeb9b624e",
-		"name": "RUCKUS One Hospitality Edition",
+		"_postman_id": "5f441fe6-373c-40b2-a0b3-64071c8d9fc6",
+		"name": "RUCKUS One Hospitality Edition at GitHub",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "32551365"
 	},
@@ -53,7 +53,7 @@
 								},
 								{
 									"key": "client_secret",
-									"value": "your_secret_id",
+									"value": "your_client_secret",
 									"type": "text"
 								}
 							]
@@ -335,13 +335,9 @@
 							}
 						},
 						"url": {
-							"raw": "https://api.eu.ruckus.cloud/mspecs/query",
-							"protocol": "https",
+							"raw": "{{baseUrl}}/mspecs/query",
 							"host": [
-								"api",
-								"eu",
-								"ruckus",
-								"cloud"
+								"{{baseUrl}}"
 							],
 							"path": [
 								"mspecs",
