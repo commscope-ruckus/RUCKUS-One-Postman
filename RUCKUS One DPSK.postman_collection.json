@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "41289b43-6395-4d6e-bfc9-8e5d171350c1",
-		"name": "RUCKUS One DPSK",
+		"_postman_id": "9f2a55cd-aa1a-49dc-bdd5-d7d53dd1411d",
+		"name": "RUCKUS One DPSK at GitHub",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "32551365"
 	},
@@ -100,6 +100,55 @@
 					"response": []
 				},
 				{
+					"name": "create DPSK pool",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"requestId\", jsonData.requestId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"deviceCountLimit\": 5,\n    \"expirationDate\": \"2025-08-24T14:15:22Z\",\n    \"expirationOffset\": 1,\n    \"expirationType\": \"SPECIFIED_DATE\",\n    \"name\": \"MMPSK\",\n    \"passphraseFormat\": \"NUMBERS_ONLY\",\n    \"passphraseLength\": 8,\n    \"policyDefaultAccess\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/dpskServices",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dpskServices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "query DPSK pools",
 					"event": [
 						{
@@ -144,55 +193,6 @@
 							"path": [
 								"dpskServices",
 								"query"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "create DPSK pool",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const jsonData = pm.response.json();",
-									"pm.collectionVariables.set(\"requestId\", jsonData.requestId);"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"deviceCountLimit\": 5,\n    \"expirationDate\": \"2025-08-24T14:15:22Z\",\n    \"expirationOffset\": 1,\n    \"expirationType\": \"SPECIFIED_DATE\",\n    \"name\": \"MMPSK\",\n    \"passphraseFormat\": \"NUMBERS_ONLY\",\n    \"passphraseLength\": 8,\n    \"policyDefaultAccess\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/dpskServices",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"dpskServices"
 							]
 						}
 					},
@@ -363,48 +363,6 @@
 			"name": "Passphrase Management",
 			"item": [
 				{
-					"name": "get DPSKs",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const jsonData = pm.response.json();",
-									"pm.collectionVariables.set(\"dpskId\", jsonData['content'][2].id);"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/dpskServices/{{dpskPoolId}}/passphrases",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"dpskServices",
-								"{{dpskPoolId}}",
-								"passphrases"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "create DPSK (most secure)",
 					"event": [
 						{
@@ -497,13 +455,55 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"abc@email.com\",\n    \"expiration\": \"UNLIMITED\",\n    \"expirationDate\": \"2025-08-24T14:15:22Z\",\n    \"length\": 8,\n    \"format\": \"NUMBERS_ONLY\",\n    \"passphrase\": \"18273645\",\n    \"mac\": \"22:22:33:44:55:66\",\n    \"numberOfDevices\": 1,\n    \"numberOfDevicesType\": \"UNLIMITED\",\n    \"numberOfPassphrases\": 1,\n    \"username\": \"simonetixa\",\n    \"vlanId\": 333\n}",
+							"raw": "{\n    \"email\": \"abc@email.com\",\n    \"expiration\": \"UNLIMITED\",\n    \"expirationDate\": \"2025-08-24T14:15:22Z\",\n    \"length\": 8,\n    \"format\": \"NUMBERS_ONLY\",\n    \"passphrase\": \"18273645\",\n    \"mac\": \"22:22:33:44:55:66\",\n    \"numberOfDevices\": 1,\n    \"numberOfDevicesType\": \"UNLIMITED\",\n    \"numberOfPassphrases\": 1,\n    \"username\": \"sheldonico\",\n    \"vlanId\": 333\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
+						"url": {
+							"raw": "{{baseUrl}}/dpskServices/{{dpskPoolId}}/passphrases",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dpskServices",
+								"{{dpskPoolId}}",
+								"passphrases"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get DPSKs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"dpskId\", jsonData['content'][1].id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
 						"url": {
 							"raw": "{{baseUrl}}/dpskServices/{{dpskPoolId}}/passphrases",
 							"host": [
