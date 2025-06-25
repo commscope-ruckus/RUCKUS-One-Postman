@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "3b4f21bd-ce42-409c-940f-603704bad1bd",
-		"name": "RUCKUS One",
+		"_postman_id": "4a651dad-f5c0-4558-bcbc-82d69efce467",
+		"name": "RUCKUS One at GitHub",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "32551365"
 	},
@@ -13,10 +13,11 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"pm.collectionVariables.set('baseUrl','base url for your region');",
-							"pm.collectionVariables.set('tenantId','your tenant id');"
+							"pm.collectionVariables.set('baseUrl','https://api.ruckus.cloud');",
+							"pm.collectionVariables.set('tenantId','your_tenant_id');"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				},
 				{
@@ -26,7 +27,8 @@
 							"const jsonData = pm.response.json();",
 							"pm.collectionVariables.set('jwt', jsonData.access_token);"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -43,12 +45,12 @@
 						},
 						{
 							"key": "client_id",
-							"value": "your client id",
+							"value": "your_client_id",
 							"type": "text"
 						},
 						{
 							"key": "client_secret",
-							"value": "your client secret",
+							"value": "your_client_secret",
 							"type": "text"
 						}
 					]
@@ -241,7 +243,8 @@
 						"exec": [
 							"pm.collectionVariables.set(\"apSerialNumber\", \"522072003629\");"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				},
 				{
@@ -251,7 +254,8 @@
 							"const jsonData = pm.response.json();",
 							"pm.collectionVariables.set(\"requestId\", jsonData.requestId);"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -271,11 +275,6 @@
 					{
 						"key": "Content-Type",
 						"value": "application/json"
-					},
-					{
-						"key": "x-rks-tenantid",
-						"value": "{{mspEcTenantId}}",
-						"type": "text"
 					}
 				],
 				"body": {
@@ -870,195 +869,7 @@
 			"response": []
 		},
 		{
-			"name": "get AP traffics",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"accept": true
-				}
-			},
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{jwt}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"filters\": {\n        \"fromTime\": \"2024-01-23T14:30:45Z\",\n        \"toTime\": \"2024-01-27T19:30:45Z\"\n    }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/reports/aps/traffics",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"reports",
-						"aps",
-						"traffics"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "get clients session history",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {}
-			},
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{jwt}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"filters\": {\n        \"fromTime\": \"2024-01-23T14:30:45Z\",\n        \"toTime\": \"2024-01-27T19:30:45Z\"\n    }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/reports/clients/sessionHistories",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"reports",
-						"clients",
-						"sessionHistories"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "get top 10 total traffics",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"accept": true
-				}
-			},
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{jwt}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"filters\": {\n        \"fromTime\": \"2024-01-23T14:30:45Z\",\n        \"toTime\": \"2024-01-25T19:30:45Z\"\n    }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/reports/apps/top10TotalTraffics",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"reports",
-						"apps",
-						"top10TotalTraffics"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "get top 10 traffics",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"accept": true
-				}
-			},
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{jwt}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"filters\": {\n        \"fromTime\": \"2024-01-23T14:30:45Z\",\n        \"toTime\": \"2024-01-25T19:30:45Z\"\n    }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/reports/apps/top10Traffics",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"reports",
-						"apps",
-						"top10Traffics"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get events",
+			"name": "get events",
 			"event": [
 				{
 					"listen": "test",
@@ -1066,7 +877,8 @@
 						"exec": [
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -1096,7 +908,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"url\": \"/events/query\",\n    \"fields\": [\n        \"event_datetime\",\n        \"severity\",\n        \"entity_type\",\n        \"product\",\n        \"entity_id\",\n        \"message\",\n        \"dpName\",\n        \"apMac\",\n        \"clientMac\",\n        \"macAddress\",\n        \"apName\",\n        \"switchName\",\n        \"serialNumber\",\n        \"networkName\",\n        \"networkId\",\n        \"ssid\",\n        \"radio\",\n        \"raw_event\",\n        \"sourceType\",\n        \"adminName\",\n        \"clientName\",\n        \"userName\",\n        \"hostname\",\n        \"adminEmail\",\n        \"administratorEmail\",\n        \"venueName\",\n        \"venueId\",\n        \"apGroupId\",\n        \"apGroupName\",\n        \"floorPlanName\",\n        \"recipientName\",\n        \"transactionId\",\n        \"name\",\n        \"ipAddress\",\n        \"detailedDescription\",\n        \"Persona-ID\"\n    ],\n    \"detailLevel\": \"debug\",\n    \"page\": 1,\n    \"pageSize\": 30,\n    \"defaultPageSize\": 10,\n    \"total\": 0,\n    \"sortField\": \"event_datetime\",\n    \"sortOrder\": \"DESC\",\n    \"filters\": {\n        \"entity_type\": [\n            \"AP\",\n            \"SECURITY\",\n            \"CLIENT\",\n            \"SWITCH\",\n            \"NETWORK\",\n            \"EDGE\"\n        ],\n        \"fromTime\": \"2024-01-25T17:57:00Z\",\n        \"toTime\": \"2024-01-26T17:57:00Z\"\n    }\n}",
+					"raw": "{\n    \"url\": \"/events/query\",\n    \"fields\": [\n        \"event_datetime\",\n        \"severity\",\n        \"entity_type\",\n        \"product\",\n        \"entity_id\",\n        \"message\",\n        \"dpName\",\n        \"apMac\",\n        \"clientMac\",\n        \"macAddress\",\n        \"apName\",\n        \"switchName\",\n        \"serialNumber\",\n        \"networkName\",\n        \"networkId\",\n        \"ssid\",\n        \"radio\",\n        \"raw_event\",\n        \"sourceType\",\n        \"adminName\",\n        \"clientName\",\n        \"userName\",\n        \"hostname\",\n        \"adminEmail\",\n        \"administratorEmail\",\n        \"venueName\",\n        \"venueId\",\n        \"apGroupId\",\n        \"apGroupName\",\n        \"floorPlanName\",\n        \"recipientName\",\n        \"transactionId\",\n        \"name\",\n        \"ipAddress\",\n        \"detailedDescription\",\n        \"Persona-ID\"\n    ],\n    \"detailLevel\": \"debug\",\n    \"page\": 1,\n    \"pageSize\": 30,\n    \"defaultPageSize\": 10,\n    \"total\": 0,\n    \"sortField\": \"event_datetime\",\n    \"sortOrder\": \"DESC\",\n    \"filters\": {\n        \"entity_type\": [\n            \"AP\",\n            \"SECURITY\",\n            \"CLIENT\",\n            \"SWITCH\",\n            \"NETWORK\",\n            \"EDGE\"\n        ],\n        \"fromTime\": \"2025-05-25T17:57:00Z\",\n        \"toTime\": \"2025-06-23T17:57:00Z\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1328,13 +1140,7 @@
 					]
 				},
 				"method": "GET",
-				"header": [
-					{
-						"key": "x-rks-tenantid",
-						"value": "{{mspEcTenantId}}",
-						"type": "text"
-					}
-				],
+				"header": [],
 				"url": {
 					"raw": "{{baseUrl}}/switches/{{switchMac}}/portSettings",
 					"host": [
@@ -1745,6 +1551,26 @@
 		},
 		{
 			"key": "clientMac",
+			"value": ""
+		},
+		{
+			"key": "switchSerialNumber",
+			"value": ""
+		},
+		{
+			"key": "name",
+			"value": ""
+		},
+		{
+			"key": "switchMac",
+			"value": ""
+		},
+		{
+			"key": "vlanProfileId",
+			"value": ""
+		},
+		{
+			"key": "port",
 			"value": ""
 		}
 	]
